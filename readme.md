@@ -1,4 +1,6 @@
+# Install & Run Macos on Ubuntu or Windows ( WSL )
 ## Install 
+```bash
 docker run -it \
     --device /dev/kvm \
     -p 50922:10022 \
@@ -10,22 +12,28 @@ docker run -it \
     -e MASTER_PLIST_URL='https://raw.githubusercontent.com/sickcodes/osx-serial-generator/master/config-custom-sonoma.plist' \
     -e SHORTNAME=sequoia \
     sickcodes/docker-osx:latest
+```
 
 ### setup
-  format the desk with 200+ GB 
-  install macos ( it will take time ) 
+  * format the desk with 200+ GB
+  * install macos ( it will take time ) 
 
 ## avoid re-install every time
 when you run the command in the Install section, this will reset your image everytime, so let's avoid that
 * shutdown macos
 * search for the image
+```bash
 sudo find /var/lib/docker -size +10G | grep mac_hdd_ng.img
+```
 * move the img file to a good location
+```bash
 mv /var/lib/.../mac_hdd_ng.img .
+```
 
 * run macos using this image, this will not reset the os
-I added 8 gb ram & cpu config and exposed the port 4000 ... you can modify / remove that.
+* I added 8 gb ram & cpu config and exposed the port 4000 ... you can modify / remove that.
 
+```bash
 docker run -it \
     --device /dev/kvm \
     -p 50922:10022 \
@@ -39,7 +47,10 @@ docker run -it \
     -e MASTER_PLIST_URL='https://raw.githubusercontent.com/sickcodes/osx-serial-generator/master/config-custom-sonoma.plist' \
     -e SHORTNAME=sequoia \
     dickhub/docker-osx:naked
+```
 
 ## Start
 you do not need to call docker run everytime, only you need to start the container
-docker start 
+```bash
+docker start stoic_goodall
+```
