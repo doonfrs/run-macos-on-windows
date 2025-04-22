@@ -3,6 +3,7 @@
 ```bash
 docker run -it \
     --device /dev/kvm \
+    --name macos \
     -p 50922:10022 \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     -e "DISPLAY=${DISPLAY:-:0.0}" \
@@ -36,6 +37,7 @@ mv /var/lib/.../mac_hdd_ng.img .
 ```bash
 docker run -it \
     --device /dev/kvm \
+    --name macos \
     -p 50922:10022 \
     -p 4000:4000 \
     -e RAM=8 -e CPU_STRING=16 \
@@ -52,5 +54,5 @@ docker run -it \
 ## Start
 you do not need to call docker run everytime, only you need to start the container
 ```bash
-docker start stoic_goodall
+docker start macos
 ```
