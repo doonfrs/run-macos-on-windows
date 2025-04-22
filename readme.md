@@ -33,7 +33,7 @@ mv /var/lib/.../mac_hdd_ng.img .
 
 * run macos using this image, this will not reset the os
 * I added 8 gb ram & cpu config and set the display to none, and ssh.
-* for ssh, from the host ssh -p 50922 localhost
+* for ssh, enable remote login from macos, then from the host ssh -p 50922 localhost
 
 ```bash
 docker run -it \
@@ -54,6 +54,7 @@ docker run -it \
 * Enable VNC and disable display, this will keep it running in the background
 * use vnc and connect to localhost:5999, no password required
 * Use it for local machine development, do not share this on an online machine unless you know what you are doing 
+* for ssh, enable remote login from macos, then from the host ssh -p 50922 localhost
 
 ```bash
 docker run -it \
