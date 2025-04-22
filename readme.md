@@ -32,18 +32,40 @@ mv /var/lib/.../mac_hdd_ng.img .
 ```
 
 * run macos using this image, this will not reset the os
-* I added 8 gb ram & cpu config and exposed the port 4000 ... you can modify / remove that.
+* I added 8 gb ram & cpu config and set the display to none, and ssh.
+* for ssh, from the host ssh -p 50922 localhost
 
 ```bash
 docker run -it \
     --device /dev/kvm \
     --name macos \
     -p 50922:10022 \
-    -p 4000:4000 \
     -e RAM=8 -e CPU_STRING=16 \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     -v "${PWD}/mac_hdd_ng.img:/image" \
     -e "DISPLAY=${DISPLAY:-:0.0}" \
+    -e CPU='Haswell-noTSX' \
+    -e CPUID_FLAGS='kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on' \
+    -e MASTER_PLIST_URL='https://raw.githubusercontent.com/sickcodes/osx-serial-generator/master/config-custom-sonoma.plist' \
+    -e SHORTNAME=sequoia \
+    dickhub/docker-osx:naked
+```
+
+* Enable VNC and disable display, this will keep it running in the background
+* use vnc and connect to localhost:5999, no password required
+* Use it for local machine development, do not share this on an online machine unless you know what you are doing 
+
+```bash
+docker run -it \
+    --device /dev/kvm \
+    --name macos \
+    -p 50922:10022 \
+    -p 5999:5999 \
+    -e RAM=8 -e CPU_STRING=16 \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -v "${PWD}/mac_hdd_ng.img:/image" \
+    -e "DISPLAY=${DISPLAY:-:0.0}" \
+    -e EXTRA="-display none -vnc 0.0.0.0:99" \
     -e CPU='Haswell-noTSX' \
     -e CPUID_FLAGS='kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on' \
     -e MASTER_PLIST_URL='https://raw.githubusercontent.com/sickcodes/osx-serial-generator/master/config-custom-sonoma.plist' \
