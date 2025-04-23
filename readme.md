@@ -10,7 +10,6 @@ docker run -it \
     -e GENERATE_UNIQUE=true \
     -e CPU='Haswell-noTSX' \
     -e CPUID_FLAGS='kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on' \
-    -e MASTER_PLIST_URL='https://raw.githubusercontent.com/sickcodes/osx-serial-generator/master/config-custom-sonoma.plist' \
     -e SHORTNAME=sequoia \
     sickcodes/docker-osx:latest
 ```
@@ -97,7 +96,6 @@ docker run -it \
     -e EXTRA="-display none -vnc 0.0.0.0:99" \
     -e CPU='Haswell-noTSX' \
     -e CPUID_FLAGS='kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on' \
-    -e MASTER_PLIST_URL='https://raw.githubusercontent.com/sickcodes/osx-serial-generator/master/config-custom-sonoma.plist' \
     -e SHORTNAME=sequoia \
     dickhub/docker-osx:naked
 ```
