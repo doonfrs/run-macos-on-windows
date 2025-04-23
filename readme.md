@@ -1,15 +1,21 @@
 # Install & Run Macos on Ubuntu or Windows ( WSL )
 ## Install 
 ```bash
+touch mac.env
 docker run -it \
     --device /dev/kvm \
     --name macos \
     -p 50922:10022 \
+    -p 5999:5999 \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -e RAM=8 -e CPU_STRING=16 \
     -e "DISPLAY=${DISPLAY:-:0.0}" \
-    -e GENERATE_UNIQUE=true \
+    -v "${PWD}/mac.env:/env" \
     -e CPU='Haswell-noTSX' \
     -e CPUID_FLAGS='kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on' \
+    -e GENERATE_UNIQUE=true \
+    -e GENERATE_SPECIFIC=true \
+    -e DEVICE_MODEL="iMacPro1,1" \
     -e SHORTNAME=sequoia \
     sickcodes/docker-osx:latest
 ```
@@ -37,68 +43,25 @@ docker run -it \
     --name macos \
     -p 50922:10022 \
     -p 5999:5999 \
-    -e RAM=8 -e CPU_STRING=16 \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
-    -e GENERATE_UNIQUE=true \
-    -e GENERATE_SPECIFIC=true \
+    -e RAM=8 -e CPU_STRING=16 \
+    -e "DISPLAY=${DISPLAY:-:0.0}" \
+    -v "${PWD}/mac.env:/env" \
+    -v "${PWD}/mac_hdd_ng.img:/image" \
+    -e CPU='Haswell-noTSX' \
+    -e CPUID_FLAGS='kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on' \
     -e DEVICE_MODEL="iMacPro1,1" \
-    -v "${PWD}/output.env:/env" \
-    -v "${PWD}/mac_hdd_ng.img:/image" \
-    -e "DISPLAY=${DISPLAY:-:0.0}" \
-    -e EXTRA="-display none -vnc 0.0.0.0:99" \
-    -e CPU='Haswell-noTSX' \
-    -e CPUID_FLAGS='kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on' \
     -e SHORTNAME=sequoia \
     dickhub/docker-osx:naked
 ```
-if you get the error:
-qemu-system-x86_64: -device vmxnet3,netdev=net0,id=net0,mac=:49:1C:8E: Property 'vmxnet3.mac' doesn't take value ':49:1C:8E'
-open the file output.env, and generate any mac online, then set the mac address in the file and save it
-
-* run macos using this image, this will not reset the os
-* I added 8 gb ram & cpu config and set the display to none, and ssh.
-* for ssh, enable remote login from macos, then from the host ssh -p 50922 localhost
-
+## use vnc only 
+if you want to disable the emulator screen and use vnc only add the line:
 ```bash
-docker run -it \
-    --device /dev/kvm \
-    --name macos \
-    -p 50922:10022 \
-    -p 5999:5999 \
-    -e RAM=8 -e CPU_STRING=16 \
-    -v /tmp/.X11-unix:/tmp/.X11-unix \
-    -e DEVICE_MODEL="iMacPro1,1" \
-    -v "${PWD}/output.env:/env" \
-    -v "${PWD}/mac_hdd_ng.img:/image" \
-    -e "DISPLAY=${DISPLAY:-:0.0}" \
     -e EXTRA="-display none -vnc 0.0.0.0:99" \
-    -e CPU='Haswell-noTSX' \
-    -e CPUID_FLAGS='kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on' \
-    -e SHORTNAME=sequoia \
-    dickhub/docker-osx:naked
 ```
+to the prev line
+( you may need to the container )
 
-* Enable VNC and disable display, this will keep it running in the background
-* use vnc and connect to localhost:5999, no password required
-* Use it for local machine development, do not share this on an online machine unless you know what you are doing 
-* for ssh, enable remote login from macos, then from the host ssh -p 50922 localhost
-
-```bash
-docker run -it \
-    --device /dev/kvm \
-    --name macos \
-    -p 50922:10022 \
-    -p 5999:5999 \
-    -e RAM=8 -e CPU_STRING=16 \
-    -v /tmp/.X11-unix:/tmp/.X11-unix \
-    -v "${PWD}/mac_hdd_ng.img:/image" \
-    -e "DISPLAY=${DISPLAY:-:0.0}" \
-    -e EXTRA="-display none -vnc 0.0.0.0:99" \
-    -e CPU='Haswell-noTSX' \
-    -e CPUID_FLAGS='kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on' \
-    -e SHORTNAME=sequoia \
-    dickhub/docker-osx:naked
-```
 
 ## Start
 you do not need to call docker run everytime, only you need to start the container
