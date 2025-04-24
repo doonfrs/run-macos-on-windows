@@ -1,21 +1,19 @@
 # Install & Run Macos on Ubuntu or Windows ( WSL )
 ## Install 
 ```bash
-touch mac.env
 docker run -it \
     --device /dev/kvm \
     --name macos \
     -p 50922:10022 \
     -p 5999:5999 \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
-    -e RAM=8 -e CPU_STRING=16 \
+    -e RAM=10 -e CPU_STRING=16 \
     -e "DISPLAY=${DISPLAY:-:0.0}" \
-    -v "${PWD}/mac.env:/env" \
+    -v "${PWD}/mac_hdd_ng.img:/image" \
     -e CPU='Haswell-noTSX' \
     -e CPUID_FLAGS='kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on' \
     -e GENERATE_UNIQUE=true \
-    -e GENERATE_SPECIFIC=true \
-    -e DEVICE_MODEL="iMacPro1,1" \
+    -e MASTER_PLIST_URL='https://raw.githubusercontent.com/sickcodes/osx-serial-generator/master/config-custom-sonoma.plist' \
     -e SHORTNAME=sequoia \
     sickcodes/docker-osx:latest
 ```
