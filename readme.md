@@ -18,7 +18,7 @@ docker run -it \
 ```
 
 ### setup
-  * format the desk with 200+ GB
+  * follow the setup instructions, go to disk utility, pick the disk wtih 200+GB size and erase it
   * install macos ( it will take time ) 
 
 ## avoid re-install every time
