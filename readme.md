@@ -7,14 +7,13 @@ docker run -it \
     -p 50922:10022 \
     -p 5999:5999 \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
-    -e RAM=10 -e CPU_STRING=16 \
     -e "DISPLAY=${DISPLAY:-:0.0}" \
-    -v "${PWD}/mac_hdd_ng.img:/image" \
+    -e RAM=10 -e CPU_STRING=16 \
+    -e GENERATE_UNIQUE=true \
     -e CPU='Haswell-noTSX' \
     -e CPUID_FLAGS='kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on' \
-    -e GENERATE_UNIQUE=true \
     -e MASTER_PLIST_URL='https://raw.githubusercontent.com/sickcodes/osx-serial-generator/master/config-custom-sonoma.plist' \
-    -e SHORTNAME=sequoia \
+    -e SHORTNAME=sonoma \
     sickcodes/docker-osx:latest
 ```
 
@@ -34,31 +33,34 @@ sudo find /var/lib/docker -size +10G | grep mac_hdd_ng.img
 mv /var/lib/.../mac_hdd_ng.img .
 ```
 
-* Generate unique
+* Now let's use the image and vnc instead of the default display  
 ```bash
+# Remove the current macos !! carefull to move the image as mentioned in the above step
+# if you do not move it, you will lose your installation
+# docker rm macos
+
+# Run the docker command
 docker run -it \
     --device /dev/kvm \
     --name macos \
     -p 50922:10022 \
     -p 5999:5999 \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
-    -e RAM=8 -e CPU_STRING=16 \
+    -e RAM=10 -e CPU_STRING=16 \
     -e "DISPLAY=${DISPLAY:-:0.0}" \
-    -v "${PWD}/mac.env:/env" \
     -v "${PWD}/mac_hdd_ng.img:/image" \
     -e CPU='Haswell-noTSX' \
     -e CPUID_FLAGS='kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on' \
-    -e DEVICE_MODEL="iMacPro1,1" \
-    -e SHORTNAME=sequoia \
+    -e EXTRA="-display none -vnc 0.0.0.0:99" \
+    -e MASTER_PLIST_URL='https://raw.githubusercontent.com/sickcodes/osx-serial-generator/refs/heads/sequoia/config-custom-sequoia.plist' \
+    -e SHORTNAME=sonoma \
     dickhub/docker-osx:naked
 ```
-## use vnc only 
-if you want to disable the emulator screen and use vnc only add the line:
-```bash
-    -e EXTRA="-display none -vnc 0.0.0.0:99" \
-```
-to the prev line
-( you may need to the container )
+
+* Connection:
+- vnc: localhost:5999
+- ssh: localhost -p 50922
+
 
 
 ## Start
